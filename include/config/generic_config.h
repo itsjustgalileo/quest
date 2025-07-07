@@ -1,0 +1,6 @@
+#ifndef GENERIC_BUILD_CONFIG_H_
+#define GENERIC_BUILD_CONFIG_H_
+
+
+
+#endif /* GENERIC_BUILD_CONFIG_H_ */

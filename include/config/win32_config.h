@@ -1,0 +1,6 @@
+#ifndef WIN32_BUILD_CONFIG_H_
+#define WIN32_BUILD_CONFIG_H_
+
+
+
+#endif /* WIN32_BUILD_CONFIG_H_ */
