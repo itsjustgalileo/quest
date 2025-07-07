@@ -12,6 +12,7 @@ extern "C" {
 #endif /* __cplusplus */
 
     extern QUEST_API void QUEST_DECL quest_todo_impl(const char *file, const char *func, int line, const char *msg);
+    
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
