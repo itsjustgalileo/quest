@@ -1,5 +1,8 @@
 #include <quest/quest_init.h>
 
+#include <quest/quest_todo.h>
+#include <quest/quest_time.h>
+
 static bool quest_is_init = false;
 
 int32 quest_init(void) {
@@ -9,7 +12,9 @@ int32 quest_init(void) {
     }
 
     /* TODO */
-    quest_todo("quest_init_ticks();");
+    if (quest_ticks_init() != 0) {
+        return 1;
+    }
         
     quest_is_init = true;
     return 0;
@@ -17,7 +22,7 @@ int32 quest_init(void) {
 
 void quest_shutdown(void) {
     /* TODO */
-    quest_todo("quest_shutdown_ticks();");
+    quest_ticks_shutdown();
     quest_is_init = false;
     return;
 }

@@ -3,6 +3,7 @@
 
 #include <quest/quest_platforms.h>
 
+#include <assert.h> /* Might implement mine later. */
 #include <stdint.h>
 #include <stdlib.h>
 #include <float.h>

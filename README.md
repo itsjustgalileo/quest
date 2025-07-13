@@ -33,6 +33,22 @@ Quest is a framework wrapping-up in a cross-platform way, all the bits of code t
 
 ## 📋 TODO
 
+- [ ] Threads
+  - [ ] TLS
+  - [ ] Spinlocks
+  - [ ] Atomics
+  - [ ] Mutex
+- [ ] Time
+  - [ ] System time
+  - [ ] World time
+- [ ] Logger
+- [ ] Stack
+- [ ] String
+  - C strings
+  - Sting view
+  - String builder
+- [ ] Arena
+
 ---
 
 ## ↩️ REFERENCES

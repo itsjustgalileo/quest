@@ -10,6 +10,7 @@
 
 #include <quest/quest_common.h>
 #include <quest/quest_init.h>
+#include <quest/quest_time.h>
 #include <quest/quest_todo.h>
 
 #endif /* QUEST_H_ */

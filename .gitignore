@@ -1,0 +1,12 @@
+# directories
+bin/
+build/
+ports/
+
+# files
+.o
+.obj
+.a
+.lib
+.so
+.dll

@@ -29,25 +29,29 @@
 #endif /* QUEST_DLL */
 #endif /* QUEST_API */
 
-#ifndef QUEST_ALIGN(al)
+#ifndef QUEST_ALIGN
 #if defined(_MSC_VER)
 #define QUEST_ALIGN(alignment) __declspec(align(alignment))
 #elif defined(__GNUC__) || defined(__clang__)
 #define QUEST_ALIGN(alignment) __attribute__((aligned(alignment)))
 #else
-#error "QUEST_ALIGN: Undefined platform"
+#error "QUEST_ALIGN: Unsupported compiler"
 #endif /* align */
-#endif /* QUEST_ALIGN(al) */
+#endif /* QUEST_ALIGN */
 
 #ifndef QUEST_ALIGNOF
-#if defined(_MSC_VER)
-#define QUEST_ALIGNOF(type) __alignof(type)
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 #define QUEST_ALIGNOF(type) _Alignof(type)
-#else
+#elif defined(_MSC_VER)
+#define QUEST_ALIGNOF(type) __alignof(type)
+#elif defined(__GNUC__) || defined(__clang__)
 #define QUEST_ALIGNOF(type) __alignof__(type)
+#else
+#error "QUEST_ALIGNOF: Unsupported compiler"
 #endif
 #endif /* QUEST_ALIGNOF */
+
+#define QUEST_MAX_ALIGN QUEST_ALIGNOF(long double)
 
 #ifndef QUEST_INLINE
 #if defined(_MSC_VER)

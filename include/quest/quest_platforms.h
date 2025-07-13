@@ -23,6 +23,6 @@
 
 #ifdef __EMSCRIPTEN__
 #define QUEST_PLATFORM_EMSCRIPTEN 1
-#endif /* Emscripten */
+#endif /* Web */
 
 #endif /* QUEST_PLATFORMS_H_ */
