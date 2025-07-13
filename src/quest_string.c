@@ -1,7 +1,6 @@
 #include <assert.h>
 #include <ctype.h>
 
-#include <quest/quest_todo.h>
 #include <quest/quest_logger.h>
 
 #include <quest/quest_string.h>
@@ -123,24 +122,24 @@ int quest_strncmp(const char *restrict str1, const char *restrict str2, size_t n
 
 int quest_strcoll(const char *restrict str1, const char *restrict str2) {
     assert(str1 && str2);
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return 0;
 }
 
 size_t quest_strspn(const char *restrict str, const char *restrict accept) {
     assert(str && accept);
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return 0;
 }
 
 size_t quest_strcspn(const char *restrict str, const char *restrict reject) {
     assert(str && reject);
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return 0;
 }
 
 char *quest_strerror(int errnum) {
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     (void)errnum;
     return NULL;
 }
@@ -154,7 +153,7 @@ size_t quest_strlen(const char *restrict str) {
 
 char *quest_strpbrk(const char *restrict str1, const char *restrict str2) {
     assert(str1 && str2);
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return NULL;
 }
 
@@ -202,14 +201,14 @@ char *quest_strstr(const char *haystack, const char *needle) {
 
 char *quest_strtok(char *restrict str, const char *restrict delim) {
     assert(str && delim);
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return NULL;
 }
 
 size_t quest_strxfrm(char *restrict dst, const char *restrict src, size_t n) {
     assert(dst && src);
     (void)n;
-    quest_todo("Not implemented!");
+    QUEST_TODO("Not implemented!");
     return 0;
 }
 

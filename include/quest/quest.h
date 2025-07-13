@@ -15,6 +15,5 @@
 #include <quest/quest_stack.h>
 #include <quest/quest_string.h>
 #include <quest/quest_time.h>
-#include <quest/quest_todo.h>
 
 #endif /* QUEST_H_ */

@@ -1,5 +1,6 @@
 #include <stdio.h>
 
+#include <quest/quest_logger.h>
 #include <quest/quest_stack.h>
 #include <quest/quest_string.h>
 
@@ -12,16 +13,16 @@ struct quest_stack {
 };
 
 quest_stack_t *quest_stack_init(size_t size, size_t count) {
-    quest_stack_t *s = (quest_stack_t *)malloc(sizeof(quest_stack_t));
+    quest_stack_t *s = (quest_stack_t *)malloc(sizeof(struct quest_stack));
     if (NULL == s) {
-        fprintf(stderr, "[stack_init]: Failed to allocate memory for stack\n");
+        QUEST_LOG_ERROR("Failed to allocate memory for stack");
         return NULL;
     }
     s->elem_size = size;
     s->capacity = count;
     s->elems = malloc(s->capacity * s->elem_size);
     if (NULL == s->elems) {
-        fprintf(stderr, "[stack_init]: Failed to allocate memory for stack elements\n");
+        QUEST_LOG_ERROR("Failed to allocate memory for stack elements");
         free(s);
         return NULL;
     }
@@ -52,8 +53,7 @@ bool quest_stack_push(quest_stack_t *s, void *elem) {
         s->elems = new_elems;
         s->capacity = new_cap;
         */
-        fprintf(stderr, "[stack_push]: stack overflow\n");
-        return false;
+        QUEST_LOG_FATAL("stack overflow");
     }
 
     void *dest = (char *)s->elems + s->size * s->elem_size;

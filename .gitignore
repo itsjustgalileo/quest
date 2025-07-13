@@ -4,9 +4,11 @@ build/
 ports/
 
 # files
-.o
-.obj
-.a
-.lib
-.so
-.dll
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dll
+# might need to adjust shell scripts later
+*.sh 

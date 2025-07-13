@@ -1,4 +1,4 @@
-#include <quest/quest_todo.h>
+#include <quest/quest_logger.h>
 #include <quest/quest_time.h>
 
 #ifdef _WIN32
@@ -50,6 +50,6 @@ void quest_sleep(uint64 time) {
     Sleep(time);
 #else
     (void)time;
-    quest_todo("quest_sleep: Not Implemented");
+    QUEST_TODO("quest_sleep: Not Implemented");
 #endif /* _WIN32 */
 }

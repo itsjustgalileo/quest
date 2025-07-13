@@ -11,7 +11,7 @@ extern "C" {
 
     typedef struct quest_stack quest_stack_t;
 
-    extern QUEST_API quest_stack_t *QUEST_DECL quest_stack_init(size_t size, size_t count);
+    extern QUEST_API quest_stack_t QUEST_DECL *quest_stack_init(size_t size, size_t count);
     extern QUEST_API void QUEST_DECL quest_stack_cleanup(quest_stack_t *s);
 
     extern QUEST_API bool QUEST_DECL quest_stack_push(quest_stack_t *s, void *elem);
@@ -20,7 +20,7 @@ extern "C" {
     extern QUEST_API size_t QUEST_DECL quest_stack_size(quest_stack_t *s);
     extern QUEST_API bool QUEST_DECL quest_stack_is_empty(quest_stack_t *s);
     extern QUEST_API bool QUEST_DECL quest_stack_reset(quest_stack_t *s);
-    extern QUEST_API void *QUEST_DECL quest_stack_top(quest_stack_t *s);
+    extern QUEST_API void QUEST_DECL *quest_stack_top(quest_stack_t *s);
     
 #ifdef __cplusplus
 }

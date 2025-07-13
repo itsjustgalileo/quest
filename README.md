@@ -44,9 +44,9 @@ Quest is a framework wrapping-up in a cross-platform way, all the bits of code t
 - [ ] Logger
 - [ ] Stack
 - [ ] String
-  - C strings
-  - Sting view
-  - String builder
+  - [ ] C strings
+  - [ ] Sting view
+  - [ ] String builder
 - [ ] Arena
 
 ---

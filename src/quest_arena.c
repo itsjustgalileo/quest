@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stddef.h>
 
+#include <quest/quest_logger.h>
 #include <quest/quest_arena.h>
 #include <quest/quest_string.h>
 
@@ -9,28 +10,28 @@ struct quest_arena {
     size_t used; /* Arena's used size */
     void *base; /* Arena's starting point */
     bool is_sub; /* Helps with free */
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     const char *debug_name;
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
 };
 
 quest_arena_t *quest_arena_init(size_t capacity, const char *name) {
-    quest_arena_t *arena = (quest_arena_t *)malloc(sizeof(quest_arena_t));
+    quest_arena_t *arena = (quest_arena_t *)malloc(sizeof(struct quest_arena));
     if (NULL == arena) {
-        fprintf(stderr, "[arena_init]: Failed to allocate memory quest_arena_t\n");
+        QUEST_LOG_ERROR("Failed to allocate memory struct quest_arena.");
         return NULL;
     }
 
     arena->is_sub = false;
     arena->capacity = capacity;
     arena->used = 0;
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     arena->debug_name = name ? name : "unnamed_arena";
 #endif
     
     arena->base = malloc(capacity);
     if (NULL == arena->base) {
-        fprintf(stderr, "[arena_init]: Failed to allocate memory for base\n");
+        QUEST_LOG_ERROR("Failed to allocate memory for base.");
         free(arena);
         return NULL;
     }
@@ -46,8 +47,7 @@ quest_arena_t *quest_arena_init(size_t capacity, const char *name) {
 void quest_arena_free(quest_arena_t *arena) {
     assert(arena);
     if (arena->is_sub) {
-        fprintf(stderr, "[arena_free]: Did you mean to call arena_rewind or arena_reset instead?\nLet's not continue, just for safety\n");
-        return;
+        QUEST_LOG_FATAL("Did you mean to call arena_rewind or arena_reset instead?Let's not continue, just for safety.");        
     }
     free(arena->base);
     free(arena);
@@ -58,23 +58,24 @@ void *quest_arena_malloc(quest_arena_t *arena, size_t size) {
     assert(arena);
     
     if (0 == size) {
-#ifndef NDEBUG
-        fprintf(stderr, "[arena_malloc]: +1 size.\n");
+#ifdef QUEST_DEBUG
+        QUEST_LOG_WARN("+1 size.");
         ++size;
-#endif /* NDEBUG */
+#else        
         return NULL;
+#endif /* QUEST_DEBUG */
     }
     
     if (arena->used + size > arena->capacity) {
-        fprintf(stderr, "[arena_malloc]: Buffer overrun\n");
+        QUEST_LOG_ERROR("Buffer overrun.");
         return NULL;
     }
 
     void *ptr = (char *)arena->base + arena->used;
     arena->used += size;
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     quest_memset(ptr, 0xAD, size);
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     
     return ptr;
 }
@@ -83,11 +84,12 @@ void *quest_arena_aligned_malloc(quest_arena_t *arena, size_t size, size_t align
     assert(arena);
 
     if (0 == size) {
-#ifndef NDEBUG
-        fprintf(stderr, "[arena_aligned_malloc]: +1 size.\n");
+#ifdef QUEST_DEBUG
+        QUEST_LOG_WARN("+1 size.");
         ++size;
-#endif /* NDEBUG */
+#else        
         return NULL;
+#endif /* QUEST_DEBUG */
     }
 
     assert((alignment & (alignment - 1)) == 0);
@@ -97,7 +99,7 @@ void *quest_arena_aligned_malloc(quest_arena_t *arena, size_t size, size_t align
     size_t padding = aligned - current;
 
     if (arena->used + size + padding > arena->capacity) {
-        fprintf(stderr, "[arena_aligned_malloc]: Buffer overrun\n");
+        QUEST_LOG_ERROR("Buffer overrun.");
         return NULL;
     }
     
@@ -108,9 +110,9 @@ void *quest_arena_aligned_malloc(quest_arena_t *arena, size_t size, size_t align
 
 void quest_arena_reset(quest_arena_t *arena) {
     assert(arena);
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     quest_memset(arena->base, 0xDE, arena->used);
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     arena->used = 0;
     return;
 }
@@ -132,7 +134,7 @@ int quest_arena_get_capacity(quest_arena_t *arena, size_t *capacity) {
     *capacity = arena->capacity;
     return 0;
 }
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
 const char *quest_arena_get_name(quest_arena_t *arena) {
     assert(arena);
     return arena->debug_name;
@@ -140,12 +142,12 @@ const char *quest_arena_get_name(quest_arena_t *arena) {
 
 void quest_arena_print(quest_arena_t *arena) {
     assert(arena);
-    fprintf(stderr, "[quest_arena_t: %s] Used: %zu / %zu bytes\n",
+    QUEST_LOG_DEBUG("[quest_arena_t: %s] Used: %zu / %zu bytes",
             arena->debug_name ? arena->debug_name : "(unnamed)",
             arena->used, arena->capacity);
     return;
 }
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
 
 int quest_arena_top(quest_arena_t *arena, void **top) {
     assert(arena && top);
@@ -161,7 +163,7 @@ quest_arena_marker_t quest_arena_mark(quest_arena_t *arena) {
 void quest_arena_rewind(quest_arena_t *arena, quest_arena_marker_t marker) {
     assert(arena);
     if (marker > arena->used || marker > arena->capacity) {
-        fprintf(stderr, "[arena_rewind]: Invalid rewind marker: out of bounds\n");
+        QUEST_LOG_ERROR("Invalid marker %zu (used: %zu, capacity: %zu)\n", marker, arena->used, arena->capacity);
         return;
     }
     arena->used = marker;
@@ -171,29 +173,30 @@ void quest_arena_rewind(quest_arena_t *arena, quest_arena_marker_t marker) {
 quest_arena_t *quest_arena_create_subarena(quest_arena_t *parent, size_t capacity, const char *name) {
     assert(parent);
     if (0 == capacity) {
-#ifndef NDEBUG
-        fprintf(stderr, "[arena_create_subarena]: +1 capacity.\n");
+#ifdef QUEST_DEBUG
+        QUEST_LOG_WARN("+1 capacity.");
         ++capacity;
-#endif /* NDEBUG */
+#else        
         return NULL;
+#endif /* QUEST_DEBUG */
     }
         
     quest_arena_t *subarena = (quest_arena_t *)quest_arena_aligned_malloc(parent, sizeof(quest_arena_t), QUEST_ALIGNOF(quest_arena_t));
     if (NULL == subarena) {
-        fprintf(stderr, "[arena_create_subarena]: Failed to malloc subarena\n");
+        QUEST_LOG_ERROR("Failed to malloc subarena.");
         return NULL;
     }
-    subarena->is_sub = true;
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     subarena->debug_name = name ? name : "unnamed_subarena";
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     
     void *sub_base = quest_arena_aligned_malloc(parent, capacity, QUEST_ALIGNOF(QUEST_MAX_ALIGN));
     if (NULL == sub_base) {
-        fprintf(stderr, "[arena_create_subarena]: Failed to malloc sub base\n");
+        QUEST_LOG_ERROR("Failed to malloc sub base.");
         return NULL;
     }
 
+    subarena->is_sub = true;
     subarena->base = sub_base;
     subarena->used = 0;
     subarena->capacity = capacity;
