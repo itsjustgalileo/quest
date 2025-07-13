@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <ctype.h>
 
 #include <quest/quest_todo.h>
 
@@ -47,17 +48,17 @@ void *quest_memcpy(void *dst, const void *src, size_t n) {
 
 void *quest_memmove(void *dst, const void *src, size_t n) {
     assert(dst && src);
-    ssize_t s;
+    intptr_t s;
     int8 *c_dst = quest_reinterpret_cast(int8 *, dst);
     int8 *c_src = quest_reinterpret_cast(int8 *, src);
     if (n == 0) {
         return dst;
     }
     if (c_dst < c_src || c_dst >= c_src + n) {
-        for (s = 0; s < n; ++s)
+        for (s = 0; s < (intptr_t)n; ++s)
             c_dst[s] = c_src[s];
     } else {
-        for (s = (ssize_t)n - 1; s >= 0; --s)
+        for (s = (intptr_t)n - 1; s >= 0; --s)
             c_dst[s] = c_src[s];
     }
     return dst;    
@@ -139,6 +140,7 @@ size_t quest_strcspn(const char *restrict str, const char *restrict reject) {
 
 char *quest_strerror(int errnum) {
     quest_todo("Not implemented!");
+    (void)errnum;
     return NULL;
 }
 
@@ -179,7 +181,7 @@ char *quest_strstr(const char *haystack, const char *needle) {
     size_t haystack_len = quest_strlen(haystack);
     size_t needle_len = quest_strlen(needle);
     if (needle_len == 0) {
-        return quest_reinterpret_cast(int8 *, (haystack));
+        return quest_reinterpret_cast(char *, (haystack));
     }
 
     if (needle_len > haystack_len) {
@@ -191,7 +193,7 @@ char *quest_strstr(const char *haystack, const char *needle) {
             j++;
         }
         if (j == needle_len) {
-            return quest_reinterpret_cast(int8 *, (haystack + i));
+            return quest_reinterpret_cast(char *, (haystack + i));
         }
     }
     return NULL;
@@ -205,6 +207,7 @@ char *quest_strtok(char *restrict str, const char *restrict delim) {
 
 size_t quest_strxfrm(char *restrict dst, const char *restrict src, size_t n) {
     assert(dst && src);
+    (void)n;
     quest_todo("Not implemented!");
     return 0;
 }
@@ -213,3 +216,99 @@ size_t quest_strxfrm(char *restrict dst, const char *restrict src, size_t n) {
  * STRING VIEW *
  ***************/
 
+struct quest_string_view {
+    const char *str;
+    size_t len;
+};
+
+bool quest_string_view_from_cstr(quest_string_view_t *sv, const char *str) {
+    assert(sv && str);
+    sv->str = str;
+    sv->len = quest_strlen(str);
+    return true;
+}
+
+bool quest_string_view_from_range(quest_string_view_t *sv, const char *str, size_t len) {
+    assert(sv && str);
+    sv->str = str;
+    sv->len = (size_t)len;
+    return true;
+}
+
+bool quest_string_view_from_span(quest_string_view_t *sv, const char *start, const char *end) {
+    assert(sv && start && end);
+    if (start > end) {
+        return false;
+    }
+    sv->str = start;
+    sv->len = (size_t)(end - start);
+    return true;
+}
+
+bool quest_string_view_equals(const quest_string_view_t *a, const quest_string_view_t *b) {
+    assert(a && b);
+    if (a->len != b->len) {
+        return false;
+    }
+    return quest_strncmp(a->str, b->str, a->len) == 0;
+}
+
+bool quest_string_view_slice(const quest_string_view_t *sv, size_t start, size_t end, quest_string_view_t *out) {
+    assert(sv && out);
+    if (start > end || end > sv->len) return false;
+    out->str = sv->str + start;
+    out->len = end - start;
+    return true;
+}
+
+bool quest_string_view_starts_with(const quest_string_view_t *sv, const char *prefix) {
+    assert(sv && prefix);
+    size_t prefix_len = quest_strlen(prefix);
+    if (sv->len < prefix_len) {        
+        return false;
+    }
+    return quest_memcmp(sv->str, prefix, prefix_len) == 0;
+    
+}
+
+bool quest_string_view_ends_with(const quest_string_view_t *sv, const char *suffix) {
+    assert(sv && suffix);
+    size_t suffix_len = quest_strlen(suffix);
+    if (suffix_len > sv->len) {        
+        return false;
+    }
+    return quest_strncmp(sv->str + (sv->len - suffix_len), suffix, suffix_len) == 0;
+}
+
+bool quest_string_view_find(const quest_string_view_t *sv, char c, size_t *index) {
+    assert(sv && index);
+    for (*index = 0; *index < sv->len; ++(*index)) {
+        if (sv->str[*index] == c) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool quest_string_view_trim_left(quest_string_view_t *sv) {
+    assert(sv);
+    size_t i = 0;
+    while (i < sv->len && isspace((unsigned char)sv->str[i])) {
+        i++;
+    }
+    sv->str += i;
+    sv->len -= i;
+    return true;
+}
+
+bool quest_string_view_trim_right(quest_string_view_t *sv) {
+    assert(sv);
+    while (sv->len > 0 && isspace((unsigned char)sv->str[sv->len - 1])) {
+        sv->len--;
+    }
+    return true;
+}
+
+bool quest_string_view_trim(quest_string_view_t *sv) {
+    return quest_string_view_trim_left(sv) && quest_string_view_trim_right(sv);
+}

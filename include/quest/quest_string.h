@@ -34,13 +34,27 @@ extern "C" {
     extern QUEST_API char *QUEST_DECL quest_strtok(char *restrict str, const char *restrict delim);
     extern QUEST_API size_t QUEST_DECL quest_strxfrm(char *restrict dst, const char *restrict src, size_t n);
 
-    typedef struct {
-        const char *str;
-        size_t len;
-        bool null_fin;
-    } string_view_t;
+    /***************
+     * STRING VIEW *
+     ***************/
 
-    extern QUEST_API bool QUEST_DECL string_view_from_cstr(string_view_t sv, const char *str);
+    typedef struct quest_string_view quest_string_view_t;
+    
+    extern QUEST_API bool QUEST_DECL quest_string_view_from_cstr(quest_string_view_t *sv, const char *str);
+    extern QUEST_API bool QUEST_DECL quest_string_view_from_range(quest_string_view_t *sv, const char *str, size_t len);
+    extern QUEST_API bool QUEST_DECL quest_string_view_from_span(quest_string_view_t *sv, const char *start, const char *end);
+
+    extern QUEST_API bool QUEST_DECL quest_string_view_equals(const quest_string_view_t *a, const quest_string_view_t *b);
+    extern QUEST_API bool QUEST_DECL quest_string_view_slice(const quest_string_view_t *sv, size_t start, size_t end, quest_string_view_t *out);
+
+    extern QUEST_API bool QUEST_DECL quest_string_view_starts_with(const quest_string_view_t *sv, const char *prefix);
+    extern QUEST_API bool QUEST_DECL quest_string_view_ends_with(const quest_string_view_t *sv, const char *suffix);
+
+    extern QUEST_API bool QUEST_DECL quest_string_view_find(const quest_string_view_t *sv, char c, size_t *index);
+
+    extern QUEST_API bool QUEST_DECL quest_string_view_trim_left(quest_string_view_t *sv);
+    extern QUEST_API bool QUEST_DECL quest_string_view_trim_right(quest_string_view_t *sv);
+    extern QUEST_API bool QUEST_DECL quest_string_view_trim(quest_string_view_t *sv);
     
 #ifdef __cplusplus
 }
