@@ -63,7 +63,7 @@
 #endif
 #endif /* QUEST_ALIGNOF */
 
-#define QUEST_MAX_ALIGN (long double)
+#define QUEST_MAX_ALIGN long double
 
 #ifndef QUEST_INLINE
 #if defined(_MSC_VER)

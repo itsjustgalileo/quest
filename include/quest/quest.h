@@ -9,7 +9,11 @@
 #define QUEST_H_
 
 #include <quest/quest_common.h>
+#include <quest/quest_arena.h>
 #include <quest/quest_init.h>
+#include <quest/quest_logger.h>
+#include <quest/quest_stack.h>
+#include <quest/quest_string.h>
 #include <quest/quest_time.h>
 #include <quest/quest_todo.h>
 

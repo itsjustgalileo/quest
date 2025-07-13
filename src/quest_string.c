@@ -2,6 +2,7 @@
 #include <ctype.h>
 
 #include <quest/quest_todo.h>
+#include <quest/quest_logger.h>
 
 #include <quest/quest_string.h>
 
@@ -216,11 +217,6 @@ size_t quest_strxfrm(char *restrict dst, const char *restrict src, size_t n) {
  * STRING VIEW *
  ***************/
 
-struct quest_string_view {
-    const char *str;
-    size_t len;
-};
-
 bool quest_string_view_from_cstr(quest_string_view_t *sv, const char *str) {
     assert(sv && str);
     sv->str = str;
@@ -311,4 +307,102 @@ bool quest_string_view_trim_right(quest_string_view_t *sv) {
 
 bool quest_string_view_trim(quest_string_view_t *sv) {
     return quest_string_view_trim_left(sv) && quest_string_view_trim_right(sv);
+}
+
+
+/******************
+ * STRING BUILDER *
+ ******************/
+
+bool quest_string_builder_init(quest_string_builder_t *sb, size_t initial_capacity) {
+    assert(sb);
+    sb->length = 0;
+    sb->capacity = initial_capacity;
+    sb->data = malloc(sb->capacity);
+    if (!sb->data) {
+        QUEST_LOG_ERROR("Failed to allocate memory for string builder");
+        return false;
+    }
+    sb->data[sb->length] = '\0';
+    return true;
+}
+
+void quest_string_builder_cleanup(quest_string_builder_t *sb) {
+    assert(sb);
+    free(sb->data);
+    sb->data = NULL;
+    sb->length = 0;
+    sb->capacity = 0;
+}
+
+void quest_string_builder_clear(quest_string_builder_t *sb) {
+    assert(sb);
+    sb->length = 0;
+    return;
+}
+
+/* Helper: grow buffer if needed */
+static bool quest_string_builder_ensure_capacity(quest_string_builder_t *sb, size_t needed) {
+    assert(sb);
+    if (needed <= sb->capacity) return true;
+
+    size_t new_capacity = sb->capacity ? sb->capacity * 2 : 16;
+    while (new_capacity < needed) {
+        new_capacity *= 2;
+    }
+
+    char *new_data = realloc(sb->data, new_capacity);
+    if (!new_data) {
+        QUEST_LOG_ERROR("Failed to grow string builder buffer");
+        return false;
+    }
+
+    sb->data = new_data;
+    sb->capacity = new_capacity;
+    return true;
+}
+
+bool quest_string_builder_append_char(quest_string_builder_t *sb, char c) {
+    assert(sb);
+    if (!quest_string_builder_ensure_capacity(sb, sb->length + 2)) {
+        return false;
+    }
+
+    sb->data[sb->length] = c;
+    sb->length++;
+    sb->data[sb->length] = '\0';
+    return true;
+}
+
+bool quest_string_builder_append_cstr(quest_string_builder_t *sb, const char *str) {
+    assert(sb && str);
+    size_t str_len = quest_strlen(str);
+    if (!quest_string_builder_ensure_capacity(sb, sb->length + str_len + 1)) {
+        return false;
+    }
+    quest_memcpy(sb->data + sb->length, str, str_len);
+    sb->length += str_len;
+    sb->data[sb->length] = '\0';
+    return true;
+}
+
+bool quest_string_builder_append_view(quest_string_builder_t *sb, const quest_string_view_t *sv) {
+    assert(sb && sv);
+    if (!quest_string_builder_ensure_capacity(sb, sb->length + sv->len + 1)) {
+        return false;
+    }
+    quest_memcpy(sb->data + sb->length, sv->str, sv->len);
+    sb->length += sv->len;
+    sb->data[sb->length] = '\0';
+    return true;
+}
+
+const char *quest_string_builder_cstr(const quest_string_builder_t *sb) {
+    assert(sb && sb->data);
+    return (const char *)sb->data;
+}
+
+size_t quest_string_builder_length(const quest_string_builder_t *sb) {
+    assert(sb);
+    return sb->length;
 }

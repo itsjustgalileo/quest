@@ -38,7 +38,10 @@ extern "C" {
      * STRING VIEW *
      ***************/
 
-    typedef struct quest_string_view quest_string_view_t;
+    typedef struct {
+        const char *str;
+        size_t len;
+    } quest_string_view_t;
     
     extern QUEST_API bool QUEST_DECL quest_string_view_from_cstr(quest_string_view_t *sv, const char *str);
     extern QUEST_API bool QUEST_DECL quest_string_view_from_range(quest_string_view_t *sv, const char *str, size_t len);
@@ -55,6 +58,28 @@ extern "C" {
     extern QUEST_API bool QUEST_DECL quest_string_view_trim_left(quest_string_view_t *sv);
     extern QUEST_API bool QUEST_DECL quest_string_view_trim_right(quest_string_view_t *sv);
     extern QUEST_API bool QUEST_DECL quest_string_view_trim(quest_string_view_t *sv);
+
+    /******************
+     * STRING BUILDER *
+     ******************/
+
+    typedef struct {
+        char *data;
+        size_t length;
+        size_t capacity;
+    } quest_string_builder_t;
+    
+    extern QUEST_API bool QUEST_DECL quest_string_builder_init(quest_string_builder_t *sb, size_t initial_capacity);
+    extern QUEST_API void QUEST_DECL quest_string_builder_cleanup(quest_string_builder_t *sb);
+
+    extern QUEST_API void QUEST_DECL quest_string_builder_clear(quest_string_builder_t *sb);
+
+    extern QUEST_API bool QUEST_DECL quest_string_builder_append_char(quest_string_builder_t *sb, char c);
+    extern QUEST_API bool QUEST_DECL quest_string_builder_append_cstr(quest_string_builder_t *sb, const char *str);
+    extern QUEST_API bool QUEST_DECL quest_string_builder_append_view(quest_string_builder_t *sb, const quest_string_view_t *sv);
+
+    extern QUEST_API const char *QUEST_DECL quest_string_builder_cstr(const quest_string_builder_t *sb);
+    extern QUEST_API size_t QUEST_DECL quest_string_builder_length(const quest_string_builder_t *sb);
     
 #ifdef __cplusplus
 }

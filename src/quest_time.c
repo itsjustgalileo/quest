@@ -1,3 +1,4 @@
+#include <quest/quest_todo.h>
 #include <quest/quest_time.h>
 
 #ifdef _WIN32
@@ -48,9 +49,7 @@ void quest_sleep(uint64 time) {
 #ifdef _WIN32
     Sleep(time);
 #else
-    struct timespec ts;
-    ts.tv_sec = time / 1000;
-    ts.tv_nsec = (time % 1000) * 1000000;
-    nanosleep(&ts, NULL); // nanosleep is POSIX standard
+    (void)time;
+    quest_todo("quest_sleep: Not Implemented");
 #endif /* _WIN32 */
 }
