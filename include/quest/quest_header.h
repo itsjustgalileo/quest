@@ -29,6 +29,18 @@
 #endif /* QUEST_DLL */
 #endif /* QUEST_API */
 
+#ifndef QUEST_PACK_SIZE
+#if defined(__x86_64__) || defined(__x86_64) || defined(__aarch64__)
+#define QUEST_PACK_SIZE 8
+#else
+#define QUEST_PACK_SIZE 4
+#endif /*  defined(_WIN32) && defined(_WIN64) */
+#endif
+
+#ifdef _MSC_VER
+#pragma pack(push, QUEST_PACK_SIZE)
+#endif /* _MSC_VER */
+
 #ifndef QUEST_ALIGN
 #if defined(_MSC_VER)
 #define QUEST_ALIGN(alignment) __declspec(align(alignment))
@@ -51,7 +63,7 @@
 #endif
 #endif /* QUEST_ALIGNOF */
 
-#define QUEST_MAX_ALIGN QUEST_ALIGNOF(long double)
+#define QUEST_MAX_ALIGN (long double)
 
 #ifndef QUEST_INLINE
 #if defined(_MSC_VER)
@@ -73,17 +85,13 @@
 #endif
 #endif /* QUEST_FORCEINLINE */
 
-#ifndef QUEST_PACK_SIZE
-#if defined(__x86_64__) || defined(__x86_64) || defined(__aarch64__)
-#define QUEST_PACK_SIZE 8
+#ifndef QUEST_DEBUG
+#if (defined(NDEBUG) || defined(_NDEBUG)) && !defined(_DEBUG)
+#define QUEST_DEBUG 0 /* Release mode */
 #else
-#define QUEST_PACK_SIZE 4
-#endif /*  defined(_WIN32) && defined(_WIN64) */
+#define QUEST_DEBUG 1 /* Debug mode */
 #endif
-
-#ifdef _MSC_VER
-#pragma pack(push, QUEST_PACK_SIZE)
-#endif /* _MSC_VER */
+#endif
 
 #ifndef QUEST_BREAKPOINT
 #if defined(_WIN32) && !defined(__GNUC__)
