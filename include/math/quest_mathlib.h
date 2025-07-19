@@ -7,6 +7,9 @@
 
 #define QUEST_PI_MIN_ITERATIONS 12.0
 
+#define QUEST_MAX(a, b) ((a) > (b) ? (a) : (b))
+#define QUEST_MIN(a, b) ((a) < (b) ? (b) : (a))
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */

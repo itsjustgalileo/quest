@@ -20,19 +20,40 @@ extern "C" {
     extern QUEST_API int QUEST_DECL quest_strcmp(const char *restrict str1, const char *restrict str2);
     extern QUEST_API int QUEST_DECL quest_strncmp(const char *restrict str1, const char *restrict str2, size_t n);
     extern QUEST_API int QUEST_DECL quest_strcoll(const char *restrict str1, const char *restrict str2);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strcoll"
+#endif /* QUEST_DEBUG */
     extern QUEST_API char QUEST_DECL *quest_strcpy(char *restrict dst, const char *restrict src);
     extern QUEST_API char QUEST_DECL *quest_strncpy(char *restrict dst, const char *restrict src, size_t capacity);
     extern QUEST_API size_t QUEST_DECL quest_strspn(const char *restrict str, const char *restrict accept);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strspn"
+#endif /* QUEST_DEBUG */
     extern QUEST_API size_t QUEST_DECL quest_strcspn(const char *restrict str, const char *restrict reject);
+    #ifndef QUEST_DEBUG
+#error "Not implemented: quest_strcspn"
+#endif /* QUEST_DEBUG */
     extern QUEST_API char QUEST_DECL *quest_strerror(int errnum);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strerror"
+#endif /* QUEST_DEBUG */
     extern QUEST_API size_t QUEST_DECL quest_strlen(const char *restrict str);
     extern QUEST_API char QUEST_DECL *quest_strpbrk(const char *restrict str1, const char *restrict str2);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strpbrk"
+#endif /* QUEST_DEBUG */    
     extern QUEST_API char QUEST_DECL *quest_strchr(const char *str, int c);
     extern QUEST_API char QUEST_DECL *quest_strrchr(const char *str, int c);
     extern QUEST_API size_t QUEST_DECL quest_strspn(const char *restrict str1, const char *restrict str2);
     extern QUEST_API char QUEST_DECL *quest_strstr(const char *haystack, const char *needle);
     extern QUEST_API char QUEST_DECL *quest_strtok(char *restrict str, const char *restrict delim);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strtok"
+#endif /* QUEST_DEBUG */    
     extern QUEST_API size_t QUEST_DECL quest_strxfrm(char *restrict dst, const char *restrict src, size_t n);
+#ifndef QUEST_DEBUG
+#error "Not implemented: quest_strxfrm"
+#endif /* QUEST_DEBUG */    
 
     /***************
      * STRING VIEW *

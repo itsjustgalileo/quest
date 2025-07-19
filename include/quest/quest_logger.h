@@ -1,7 +1,7 @@
 #ifndef QUEST_LOGGER_H_
 #define QUEST_LOGGER_H_
 
-#include <quest/quest_common.h>>
+#include <quest/quest_common.h>
 
 #include <quest/quest_header.h>
 

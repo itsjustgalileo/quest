@@ -20,7 +20,8 @@ double quest_pi(void) {
 uint32 quest_factorial(uint32 n) {
     /* First instinct is to write
        return n <= 1 ? 1 : n * factorial(n - 1);
-       But in case n gets too large, recursion is counterintuitive
+       But in case n gets too large, recursion is counterintuitivem
+       And this is not Haskell
     */
     uint32 r = 1;
     for (uint32 i = 1; i < n; ++i) {
