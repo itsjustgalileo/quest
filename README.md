@@ -38,6 +38,7 @@ Quest is a framework wrapping-up in a cross-platform way, all the bits of code t
   - [ ] Spinlocks
   - [ ] Atomics
   - [ ] Mutex
+  - [ ] Threads
 - [ ] Time
   - [ ] System time
   - [ ] World time
@@ -48,6 +49,11 @@ Quest is a framework wrapping-up in a cross-platform way, all the bits of code t
   - [ ] Sting view
   - [ ] String builder
 - [ ] Arena
+- [ ] Vector
+- [ ] List
+- [ ] Queue
+- [ ] Math
+- [ ] Graphics
 
 ---
 
