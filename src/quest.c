@@ -3,6 +3,8 @@
 #include <quest/quest_time.h>
 #include <quest/quest_logger.h>
 
+#include <math/quest_mathlib.h>
+
 static bool quest_is_init = false;
 
 int32 quest_init(void) {
@@ -11,6 +13,8 @@ int32 quest_init(void) {
         return 0;
     }
 
+    /* Calculate pi */
+    QUEST_PI = quest_pi();
     quest_logger_init();    
     /* We kinda need to track the result from this.
        But if this fails, I think we have bigger probems!

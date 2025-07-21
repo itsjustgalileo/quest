@@ -1,8 +1,6 @@
-#include <stdio.h>
-#include <stddef.h>
+#include <quest/quest_arena.h>
 
 #include <quest/quest_logger.h>
-#include <quest/quest_arena.h>
 #include <quest/quest_string.h>
 
 struct quest_arena {

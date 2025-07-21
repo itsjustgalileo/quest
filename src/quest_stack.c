@@ -1,7 +1,6 @@
-#include <stdio.h>
+#include <quest/quest_stack.h>
 
 #include <quest/quest_logger.h>
-#include <quest/quest_stack.h>
 #include <quest/quest_string.h>
 
 struct quest_stack {
@@ -27,9 +26,9 @@ quest_stack_t *quest_stack_init(size_t size, size_t count) {
         return NULL;
     }
     s->size = 0;
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     quest_memset(s->elems, 0xAD, s->elem_size * s->capacity);
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     return s;
 }
 
@@ -82,9 +81,9 @@ bool quest_stack_is_empty(quest_stack_t *s) {
 
 bool quest_stack_reset(quest_stack_t *s) {
     assert(s);
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     quest_memset(s->elems, 0xDE, s->elem_size * s->capacity);
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     s->size = 0;
     return true;
 }

@@ -13,7 +13,7 @@ LARGE_INTEGER counter;
 #endif /* _WIN32 */
 
 uint32 quest_ticks_init(void) {
-#ifdef _WIN32
+#ifdef QUEST_PLATOFORM_WINDOWS
     if (!QueryPerformanceFrequency(&frequency)) {
         return 1;
     }
@@ -32,7 +32,7 @@ void quest_ticks_shutdown(void) {
 }
 
 uint64 quest_get_ticks(void) {
-#ifdef _WIN32
+#ifdef QUEST_PLATFORM_WINDOWS
     if (!QueryPerformanceCounter(&counter)) {
         /* technically, we need to throw an exception but... */
         return 0;
@@ -44,9 +44,8 @@ uint64 quest_get_ticks(void) {
 #endif /* _WIN32 */
 }
 
-
 void quest_sleep(uint64 time) {
-#ifdef _WIN32
+#ifdef QUEST_PLATFORM_WINDOWS
     Sleep(time);
 #else
     (void)time;

@@ -23,10 +23,10 @@ extern "C" {
     extern QUEST_API int32 QUEST_DECL quest_arena_get_available(quest_arena_t *arena, size_t *size);
     extern QUEST_API int32 QUEST_DECL quest_arena_get_capacity(quest_arena_t *arena, size_t *capacity);
     extern QUEST_API int32 QUEST_DECL quest_arena_top(quest_arena_t *arena, void **top);
-#ifndef NDEBUG
+#ifdef QUEST_DEBUG
     extern QUEST_API const char QUEST_DECL *quest_arena_get_name(quest_arena_t *arena);
     extern QUEST_API void QUEST_DECL quest_arena_print(quest_arena_t *arena);
-#endif /* NDEBUG */
+#endif /* QUEST_DEBUG */
     
     extern QUEST_API quest_arena_marker_t QUEST_DECL quest_arena_mark(quest_arena_t *arena);
     extern QUEST_API void QUEST_DECL quest_arena_rewind(quest_arena_t *arena, quest_arena_marker_t marker);

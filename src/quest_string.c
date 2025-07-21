@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <ctype.h>
 
 #include <quest/quest_logger.h>

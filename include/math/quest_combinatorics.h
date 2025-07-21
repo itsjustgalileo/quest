@@ -1,0 +1,6 @@
+#ifndef QUEST_COMBINATORICS_H_
+#define QUEST_COMBINATORICS_H_
+
+
+
+#endif /* QUEST_COMBINATORICS_H_ */
